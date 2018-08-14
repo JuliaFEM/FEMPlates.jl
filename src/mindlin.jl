@@ -26,27 +26,27 @@ function FEMBase.assemble_elements!(problem::Problem{MindlinPlate},
                 gamma = element("shear correction factor", ip, time)
             end
             # http://what-when-how.com/the-finite-element-method/fem-for-plates-and-shells-finite-element-method-part-1/
-            G = E/(2.0 * (1.0 - nu))
+            G = E/(2.0 * (1.0 + nu))
             Db = E*t^3/(12*(1-nu^2)) * [
                 1.0  nu  0.0
                 nu  1.0  0.0
-                0.0 0.0 1-nu]
+                0.0 0.0 (1-nu)/2]
             Ds = G*t*gamma*[1.0 0.0; 0.0 1.0]
             B_I = zeros(3, 12)
             N = element(ip, time)
             Grad = element(ip, time, Val{:Grad})
             for j=1:4
-                B_I[1, (j-1)*3+3] = Grad[1,j]
-                B_I[2, (j-1)*3+2] = Grad[2,j]
-                B_I[3, (j-1)*3+2] = Grad[1,j]
-                B_I[3, (j-1)*3+3] = Grad[2,j]
+                B_I[1, (j-1)*3+2] = Grad[1,j]
+                B_I[2, (j-1)*3+3] = Grad[2,j]
+                B_I[3, (j-1)*3+2] = Grad[2,j]
+                B_I[3, (j-1)*3+3] = Grad[1,j]
             end
             B_O = zeros(2, 12)
             for j=1:4
                 B_O[1, (j-1)*3+1] = Grad[1,j]
-                B_O[1, (j-1)*3+3] = N[j]
+                B_O[1, (j-1)*3+2] = N[j]
                 B_O[2, (j-1)*3+1] = Grad[2,j]
-                B_O[2, (j-1)*3+2] = N[j]
+                B_O[2, (j-1)*3+3] = N[j]
             end
             z = zeros(3, 2)
             D = [Db z; z' Ds]

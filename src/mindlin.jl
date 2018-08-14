@@ -53,6 +53,10 @@ function FEMBase.assemble_elements!(problem::Problem{MindlinPlate},
             K1 = ip.weight * B_I'*Db*B_I * detJ
             K2 = ip.weight * B_O'*Ds*B_O * detJ
             Ke += (K1 + K2)
+            if haskey(element, "distributed load")
+                p = element("distributed load", ip, time)
+                fe[1:3:end] += ip.weight * p * N' * detJ
+            end
         end
         gdofs = get_gdofs(problem, element)
         add!(assembly.K, gdofs, gdofs, Ke)

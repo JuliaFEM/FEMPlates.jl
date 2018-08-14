@@ -6,6 +6,7 @@ module FEMPlates
 using Reexport
 @reexport using FEMBase
 
-println("Hello world!")
+include("mindlin.jl")
+export MindlinPlate
 
 end

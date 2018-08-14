@@ -8,4 +8,7 @@ using FEMPlates
     @testset "test_mindlin_stiffness_matrix" begin
         include("test_mindlin_stiffness_matrix.jl")
     end
+    @testset "test_mindlin_force_vector" begin
+        include("test_mindlin_force_vector.jl")
+    end
 end

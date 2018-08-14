@@ -11,7 +11,39 @@
 FEMPlates.jl contains mathematical formulations for plate bending problems.
 
 Supported formulations:
-- nothing yet
+- Mindlin plate
+
+```julia
+using JuliaFEM
+
+field_elements, boundary_elements = get_unit_square()
+
+using FEMPlates
+
+update!(field_elements, "youngs modulus", 4880.0)
+update!(field_elements, "poissons ratio", 1/3)
+update!(field_elements, "thickness", 0.5)
+update!(field_elements, "distributed load", 10.0)
+plate = Problem(MindlinPlate, "test problem", 3)
+add_elements!(plate, field_elements)
+bc = Problem(Dirichlet, "fixed", 3, "displacement")
+add_elements!(bc, boundary_elements)
+update!(bc, "displacement 1", 0.0)
+analysis = Analysis(Linear)
+add_problems!(analysis, [plate, bc])
+run!(analysis)
+
+u = plate.assembly.u
+X = plate("geometry", 0.0)
+N = length(X)
+x = [X[i][1] for i=1:N]
+y = [X[i][2] for i=1:N]
+
+using Plots
+surface(x, y, u[1:3:end])
+```
+
+![result](docs/src/figs/mindlin_plate.png "Results of plate bending problem")
 
 [contrib-url]: https://juliafem.github.io/FEMPlates.jl/latest/man/contributing/
 [discourse-tag-url]: https://discourse.julialang.org/tags/boundingsphere

@@ -9,4 +9,7 @@ using Reexport
 include("mindlin.jl")
 export MindlinPlate
 
+include("dkt.jl")
+export DKT
+
 end

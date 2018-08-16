@@ -45,6 +45,33 @@ surface(x, y, u[1:3:end])
 
 ![result](docs/src/figs/mindlin_plate.png "Results of plate bending problem")
 
+# Discrete Kirchhoff plate
+
+```julia
+using JuliaFEM
+using JuliaFEM.Preprocess
+add_elements! = JuliaFEM.add_elements!
+meshfile = Pkg.dir("FEMPlates", "examples", "dkt", "mesh.med")
+mesh = aster_read_mesh(meshfile)
+field_elements = create_elements(mesh, "PLATE")
+update!(field_elements, "youngs modulus", 210.0e9)
+update!(field_elements, "poissons ratio", 0.3)
+update!(field_elements, "thickness", 50.0e-3)
+update!(field_elements, "distributed load", 1.0)
+plate = Problem(DKT, "test problem", 3)
+add_elements!(plate, field_elements)
+boundary_elements = create_elements(mesh, "BORDER")
+update!(boundary_elements, "displacement 1", 0.0)
+bc = Problem(Dirichlet, "fixed", 3, "displacement")
+add_elements!(bc, boundary_elements)
+analysis = Analysis(Linear)
+add_problems!(analysis, [plate, bc])
+run!(analysis)
+```
+
+![dkt](examples/dkt/solution.png "Results of plate bending problem using DKT")
+
+
 [contrib-url]: https://juliafem.github.io/FEMPlates.jl/latest/man/contributing/
 [discourse-tag-url]: https://discourse.julialang.org/tags/boundingsphere
 [gitter-url]: https://gitter.im/JuliaFEM/JuliaFEM.jl

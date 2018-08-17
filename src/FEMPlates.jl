@@ -12,4 +12,7 @@ export MindlinPlate
 include("dkt.jl")
 export DKT
 
+include("shell.jl")
+export Shell
+
 end

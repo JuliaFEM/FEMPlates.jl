@@ -11,4 +11,7 @@ using FEMPlates
     @testset "test_mindlin_force_vector" begin
         include("test_mindlin_force_vector.jl")
     end
+    @testset "test_dkt" begin
+        include("test_dkt.jl")
+    end
 end

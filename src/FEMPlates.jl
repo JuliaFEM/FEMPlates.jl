@@ -12,4 +12,7 @@ export MindlinPlate
 include("dkt.jl")
 export DKT
 
+include("solidshell.jl")
+export SolidShell
+
 end

@@ -31,7 +31,7 @@ end
 
 Return basis functions and their partial derivatives for DKT.
 """
-function basis_factory(::Problem{DKT}, element::Element{Tri3})
+function basis_factory(::Problem{DKT}, element::Element{Tri3}, time)
     X = element("geometry", time)
     x1, x2, x3 = (X[i][1] for i in 1:3)
     y1, y2, y3 = (X[i][2] for i in 1:3)
@@ -100,15 +100,15 @@ function basis_factory(::Problem{DKT}, element::Element{Tri3})
     # println("(r4, r5, r6) = ($r4, $r5, $r6)")
     # println("(t4, t5, t6) = ($t4, $t5, $t6)")
 
-    function N(xi)
-        xi, eta = ip.coords
-        N1 = 2.0*(1.0-xi[1]-xi[2])*(0.5-xi[1]-xi[2])
-        N2 = xi[1]*(2.0*xi[1]-1.0)
-        N3 = xi[2]*(2.0*xi[2]-1.0)
-        N4 = 4.0*xi[1]*xi[2]
-        N5 = 4.0*xi[2]*(1.0-xi[1]-xi[2])
-        N6 = 4.0*xi[1]*(1.0-xi[1]-xi[2])
-        return [N1 N2 N3 N4 N5 N6]
+    function N(ip)
+        xi, eta = ip
+        N1 = 2.0*(1.0-xi-eta)*(0.5-xi-eta)
+        N2 = xi*(2.0*xi-1.0)
+        N3 = eta*(2.0*eta-1.0)
+        N4 = 4.0*xi*eta
+        N5 = 4.0*eta*(1.0-xi-eta)
+        N6 = 4.0*xi*(1.0-xi-eta)
+        return (N1, N2, N3, N4, N5, N6)
     end
 
     function Hx(xi)
@@ -213,7 +213,16 @@ function FEMBase.assemble_elements!(problem::Problem{DKT},
         fill!(Ke, 0.0)
         fill!(fe, 0.0)
 
-        Hx, Hy, dHxdxi, dHxdeta, dHydxi, dHydeta = basis_factory(problem, element)
+        X = element("geometry", time)
+        x1, x2, x3 = (X[i][1] for i in 1:3)
+        y1, y2, y3 = (X[i][2] for i in 1:3)
+        x23 = x2-x3
+        x31 = x3-x1
+        x12 = x1-x2
+        y23 = y2-y3
+        y31 = y3-y1
+        y12 = y1-y2
+        Hx, Hy, dHxdxi, dHxdeta, dHydxi, dHydeta = basis_factory(problem, element, time)
 
         for ip in get_integration_points(element)
 

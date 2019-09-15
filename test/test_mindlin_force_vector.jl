@@ -1,8 +1,7 @@
 # This file is a part of JuliaFEM.
 # License is MIT: see https://github.com/JuliaFEM/FEMPlates.jl/blob/master/LICENSE
 
-using Base.Test
-using FEMPlates
+using Test, FEMBase, FEMPlates
 
 # Create 1x1 element, assemble force vector.
 
@@ -18,5 +17,5 @@ problem = Problem(MindlinPlate, "test plate", 3)
 add_elements!(problem, [element])
 time = 0.0
 assemble!(problem, time)
-f = full(problem.assembly.f)
+f = Matrix(problem.assembly.f)
 @test isapprox(f[1:3:end], 2.5*[1.0, 1.0, 1.0, 1.0])

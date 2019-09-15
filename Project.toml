@@ -1,0 +1,13 @@
+name = "FEMPlates"
+uuid = "378e4579-6e42-5a67-89c0-cfdbc1baa884"
+version = "0.0.1"
+author = ["Jukka Aho <ahojukka5@gmail.com>"]
+
+[deps]
+FEMBase = "fbcbbc08-f1bf-5204-9233-b69f5d396135"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

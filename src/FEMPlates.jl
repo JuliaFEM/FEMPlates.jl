@@ -3,8 +3,7 @@
 
 module FEMPlates
 
-using Reexport
-@reexport using FEMBase
+using FEMBase
 
 include("mindlin.jl")
 export MindlinPlate

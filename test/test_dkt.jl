@@ -1,8 +1,7 @@
 # This file is a part of JuliaFEM.
 # License is MIT: see https://github.com/JuliaFEM/FEMPlates.jl/blob/master/LICENSE
 
-using Base.Test
-using FEMPlates
+using Test, FEMBase, FEMPlates
 
 # Create 1x1 element, assemble stiffness matrix.
 
@@ -19,8 +18,8 @@ problem = Problem(DKT, "test plate", 3)
 add_elements!(problem, [element])
 time = 0.0
 assemble!(problem, time)
-K = full(problem.assembly.K)
-f = full(problem.assembly.f)
+K = Matrix(problem.assembly.K)
+f = Matrix(problem.assembly.f)
 
 K_expected = [
  4880     0     0  -2440   1220  -1220  -2440  1220     0
@@ -35,5 +34,5 @@ K_expected = [
 @test isapprox(K, K_expected)
 
 f_expected = zeros(9)
-f_expected[1:3:end] = 1.0
+f_expected[1:3:end] .= 1.0
 @test isapprox(f, f_expected)

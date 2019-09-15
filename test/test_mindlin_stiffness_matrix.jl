@@ -1,8 +1,7 @@
 # This file is a part of JuliaFEM.
 # License is MIT: see https://github.com/JuliaFEM/FEMPlates.jl/blob/master/LICENSE
 
-using Base.Test
-using FEMPlates
+using Test, FEMBase, FEMPlates
 
 # Create 1x1 element, assemble stiffness matrix.
 
@@ -17,13 +16,13 @@ problem = Problem(MindlinPlate, "test plate", 3)
 add_elements!(problem, [element])
 time = 0.0
 assemble!(problem, time)
-K = full(problem.assembly.K)
+K = Matrix(problem.assembly.K)
 #display(K)
 fixed_dofs = [1, 2, 3, 10, 11, 12]
 free_dofs = setdiff(1:12, fixed_dofs)
 f = zeros(12)
-f[[4, 7]] = 10.0
-u = zeros(f)
+f[[4, 7]] .= 10.0
+u = zeros(12)
 u[free_dofs] = K[free_dofs, free_dofs] \ f[free_dofs]
 #display(u)
 u_expected = [

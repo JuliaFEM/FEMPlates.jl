@@ -1,7 +1,7 @@
 name = "FEMPlates"
 uuid = "378e4579-6e42-5a67-89c0-cfdbc1baa884"
 version = "0.0.1"
-author = ["Jukka Aho <ahojukka5@gmail.com>"]
+author = ["Jukka Aho <ahojukka5@gmail.com>", "Antti H Niemi <antti.h.niemi@gmail.com>"]
 
 [deps]
 FEMBase = "fbcbbc08-f1bf-5204-9233-b69f5d396135"
